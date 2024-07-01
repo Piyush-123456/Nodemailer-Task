@@ -1,14 +1,17 @@
 var express = require('express');
 var router = express.Router();
 const { sendMail } = require("../utils/mail")
+const collection = require("../models/sch")
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post("/send-mail", (req, res, next) => {
-  sendMail(req,res);
-  res.send("mail send")
+router.post("/send-mail", async (req, res, next) => {
+  await sendMail(req, res);
+  const user = await new collection(req.body);
+  await user.save();
+  res.send("mail send");
 })
 
 module.exports = router;
